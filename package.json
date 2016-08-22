@@ -1,0 +1,12 @@
+{
+    "name": "hack_emulator",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "build": "babel -d lib/ src/",
+        "run": "node lib/index.js"
+    },
+    "author": "",
+    "license": "MIT"
+}
