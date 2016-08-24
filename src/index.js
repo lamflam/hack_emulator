@@ -42,14 +42,12 @@ emulator.loadProgram(`0000000000010000
 1110001100001000
 0000000000011010
 1110101010000111`);
-console.log(emulator._mmu._rom);
 
 
 let start = new Date().getTime();
-emulator.run();
+emulator.start();
 setTimeout(() => {
     emulator.stop();
     console.log((new Date().getTime() - start) + 'ms');
-    console.log(emulator._mmu._ram);
     console.log('ticks', emulator._cpu._clock.ticks);
-}, 100000);
+}, 10000);

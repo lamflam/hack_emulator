@@ -56,6 +56,14 @@ export class CPU {
         this._clock = { ticks: 0 };
     }
 
+    get reg() {
+        return this._reg;
+    }
+
+    get clock() {
+        return this._clock;
+    }
+
     get opCode() {
         // For C instructions, shift to grab the leftmost 10 bits, otherwise
         // use the hardcoded A instruction value.
