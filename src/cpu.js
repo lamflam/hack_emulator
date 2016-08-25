@@ -56,13 +56,45 @@ export class CPU {
         this._clock = { ticks: 0 };
     }
 
-    get reg() {
-        return this._reg;
+    // Registers
+
+    get A() {
+        return this._reg.a;
+    }
+
+    set A(word) {
+        return this._reg.a = word;
+    }
+
+    get D() {
+        return this._reg.d;
+    }
+
+    set D(word) {
+        return this._reg.d = word;
+    }
+
+    get M() {
+        return this._mmu.readWord(this.A);
+    }
+
+    set M(word) {
+        return this._mmu.writeWord(this.A, word);
+    }
+
+    get PC() {
+        return this._reg.pc;
+    }
+
+    set PC(word) {
+        return this._reg.pc = word;
     }
 
     get clock() {
         return this._clock;
     }
+
+    // Instruction bits
 
     get opCode() {
         // For C instructions, shift to grab the leftmost 10 bits, otherwise
@@ -100,7 +132,7 @@ export class CPU {
 
     tick() {
         // Read in the current instruction
-        this._ins = this._mmu.readWordROM(this._reg.pc);
+        this._ins = this._mmu.readWordROM(this.PC);
         this._clock.ticks++;
 
         // Don't do anything if we are past the end of the ROM.
@@ -113,13 +145,13 @@ export class CPU {
         // Store `word` in any destination with its bit set.
         let dest = this.dest;
         if (dest & 0b1) {
-            this._mmu.writeWord(this._reg.a, word);
+            this.M = word;
         }
         if (dest & 0b10) {
-            this._reg.d = word;
+            this.D = word;
         }
         if (dest & 0b100) {
-            this._reg.a = word;
+            this.A = word;
         }
 
         // jump has three bits corresponding to <, ==, and > operators.
@@ -129,10 +161,10 @@ export class CPU {
         if (((jump & 0b100) && word < 0) ||
             ((jump & 0b10) && word == 0) ||
             ((jump & 0b1) && word > 0)) {
-                this._reg.pc = this._reg.a;
+                this.PC = this.A;
         } else {
             // If the jump comparison fails, just increment the counter.
-            this._reg.pc++;
+            this.PC = this.PC + 1;
         }
     }
 
@@ -155,102 +187,102 @@ export class CPU {
     }
 
     REG_D() {
-        return this._reg.d;
+        return this.D;
     }
 
     REG_A() {
-        return this._reg.a;
+        return this.A;
     }
 
     NOT_D() {
-        return ~this._reg.d;
+        return ~this.D;
     }
 
     NOT_A() {
-        return ~this._reg.a;
+        return ~this.A;
     }
 
     NEG_D() {
-        return -this._reg.d;
+        return -this.D;
     }
 
     NEG_A() {
-        return -this._reg.a;
+        return -this.A;
     }
 
     ADD_1D() {
-        return this._reg.d + 1;
+        return this.D + 1;
     }
 
     ADD_1A() {
-        return this._reg.a + 1;
+        return this.A + 1;
     }
 
     SUB_1D() {
-        return this._reg.d - 1;
+        return this.D - 1;
     }
 
     SUB_1A() {
-        return this._reg.a - 1;
+        return this.A - 1;
     }
 
     ADD_AD() {
-        return this._reg.d + this._reg.a;
+        return this.D + this.A;
     }
 
     SUB_AD() {
-        return this._reg.d - this._reg.a;
+        return this.D - this.A;
     }
 
     SUB_DA() {
-        return this._reg.a - this._reg.d;
+        return this.A - this.D;
     }
 
     AND_AD() {
-        return this._reg.d & this._reg.a;
+        return this.D & this.A;
     }
 
     OR_AD() {
-        return this._reg.d | this._reg.a;
+        return this.D | this.A;
     }
 
     REG_M() {
-        return this._mmu.readWord(this._reg.a);
+        return this.M;
     }
 
     NOT_M() {
-        return ~this._mmu.readWord(this._reg.a);
+        return ~this.M;
     }
 
     NEG_M() {
-        return -this._mmu.readWord(this._reg.a);
+        return -this.M;
     }
 
     ADD_1M() {
-        return this._mmu.readWord(this._reg.a) + 1;
+        return this.M + 1;
     }
 
     SUB_1M() {
-        return this._mmu.readWord(this._reg.a) -1;
+        return this.M - 1;
     }
 
     ADD_MD() {
-        return this._reg.d + this._mmu.readWord(this._reg.a);
+        return this.D + this.M;
     }
 
     SUB_MD() {
-        return this._reg.d - this._mmu.readWord(this._reg.a);
+        return this.D - this.M;
     }
 
     SUB_DM() {
-        return this._mmu.readWord(this._reg.a) - this._reg.d;
+        return this.M - this.D;
     }
 
     AND_MD() {
-        return this._reg.d & this._mmu.readWord(this._reg.a);
+        return this.D & this.M;
     }
 
     OR_MD() {
-        return this._reg.d | this._mmu.readWord(this._reg.a);
+        return this.D | this.M;
     }
 }
