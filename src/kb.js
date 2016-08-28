@@ -3,6 +3,7 @@
 export class KB {
 
     get map() {
+        // Key table described in Chapter 4
         return {
             13: 128,
             8:  129,
