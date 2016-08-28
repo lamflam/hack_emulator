@@ -14,10 +14,16 @@ class Example {
             <menu>
                 <div id='program'></div>
                 <div>
-                    <span id='toggle'><i class='icono-play' id='control'></i></span>
-                    <span><i class='icono-next' id='step'></i></span>
+                    <span id='toggle' title='Play'>
+                        <i class='icono-play' id='control'></i>
+                    </span>
+                    <span title='Step'>
+                        <i class='icono-next' id='step'></i>
+                    </span>
                     <label for='load' class='load-program'>
-                        <span><i class='icono-terminal'></i></span>
+                        <span title='Load Program'>
+                            <i class='icono-terminal'></i>
+                        </span>
                     </label>
                     <input id='load' type='file'></input>
                 </div>
@@ -59,10 +65,14 @@ class Example {
         this.refreshRate = document.getElementById('refresh-rate');
         this.refreshRate.value = this.emulator.refreshRate;
         this.refreshRate.onchange = (e) => this.changeRate(e);
+        this.refreshRate.onkeydown = (e) => e.stopPropagation();
+        this.refreshRate.onkeyup = (e) => e.stopPropagation();
 
         this.ticks = document.getElementById('ticks');
         this.ticks.value = this.emulator.ticksPerStep;
         this.ticks.onchange = (e) => this.changeTicks(e);
+        this.ticks.onkeydown = (e) => e.stopPropagation();
+        this.ticks.onkeyup = (e) => e.stopPropagation();
     }
 
     toggle() {
