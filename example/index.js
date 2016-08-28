@@ -15,14 +15,17 @@ class Example {
                 <div id='program'></div>
                 <div>
                     <span id='toggle' title='Play'>
-                        <i class='icono-play' id='control'></i>
+                        <i class='icono-play disabled' id='control'></i>
                     </span>
                     <span title='Step'>
-                        <i class='icono-next' id='step'></i>
+                        <i class='icono-next disabled' id='step'></i>
+                    </span>
+                    <span title='Reset'>
+                        <i class='icono-stop disabled' id='reset'></i>
                     </span>
                     <label for='load' class='load-program'>
                         <span title='Load Program'>
-                            <i class='icono-terminal'></i>
+                            <i class='icono-terminal' id='terminal'></i>
                         </span>
                     </label>
                     <input id='load' type='file'></input>
@@ -57,8 +60,12 @@ class Example {
         this.stepButton = document.getElementById('step');
         this.stepButton.onclick = () => this.step();
 
+        this.resetButton = document.getElementById('reset');
+        this.resetButton.onclick = () => this.reset();
+
         this.loadButton = document.getElementById('load');
         this.loadButton.onchange = (e) => this.reader.readAsText(e.target.files[0]);
+        this.terminal = document.getElementById('terminal');
         this.programEl = document.getElementById('program');
         this.programEl.textContent = 'No program';
 
@@ -83,11 +90,19 @@ class Example {
         }
     }
 
+    reset() {
+        this.stop();
+        this.stepButton.classList.add('disabled');
+        this.emulator.reset();
+    }
+
     stop() {
         this.emulator.stop();
         this.running = false;
         this.toggleIcon.className = 'icono-play';
         this.toggleButton.blur();
+        this.stepButton.classList.remove('disabled');
+        this.terminal.classList.remove('disabled');
     }
 
     play() {
@@ -95,15 +110,24 @@ class Example {
         this.running = true;
         this.toggleIcon.className = 'icono-pause';
         this.toggleButton.blur();
+        this.stepButton.classList.add('disabled');
+        this.terminal.classList.add('disabled');
     }
 
     step() {
-        this.emulator.step(true);
+        if (!this.stepButton.classList.contains('disabled')) {
+            this.emulator.step(true);
+        }
     }
 
     loadProgram(e) {
-        this.programEl.textContent = this.loadButton.value.split('\\').pop();
-        this.emulator.loadProgram(e.target.result);
+        if (!this.terminal.classList.contains('disabled')) {
+            this.programEl.textContent = this.loadButton.value.split('\\').pop();
+            this.emulator.loadProgram(e.target.result);
+            this.reset();
+            this.toggleIcon.classList.remove('disabled');
+            this.resetButton.classList.remove('disabled');
+        }
     }
 
     changeRate(e) {

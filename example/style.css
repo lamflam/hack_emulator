@@ -12,7 +12,11 @@
 }
 
 #hack_emulator menu i {
-    color: black;
+    color: rgba(0,0,0,1);
+}
+
+#hack_emulator .disabled {
+    color: rgba(0,0,0,0.4);
 }
 
 #hack_emulator input[type="file"] {

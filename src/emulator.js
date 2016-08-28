@@ -49,6 +49,13 @@ export class Emulator {
         this._refreshMS = ms;
     }
 
+    reset() {
+        this._gpu.reset();
+        this._mmu.reset();
+        this._kb.reset();
+        this._cpu.reset();
+    }
+
     loadProgram(code) {
         // Load a Hack program line by line into the ROM for execution
         this.stop();

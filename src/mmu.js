@@ -7,10 +7,14 @@
 export class MMU {
 
     constructor(gpu, kb) {
-        this._rom = [];
-        this._ram = [];
         this._gpu = gpu;
         this._kb = kb;
+        this._rom = [];
+        this.reset();
+    }
+
+    reset() {
+        this._ram = [];
     }
 
     load(code) {

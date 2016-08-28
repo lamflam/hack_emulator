@@ -25,7 +25,15 @@ export class GPU {
             canvas.width = GPU.cols;
             this._ctx = canvas.getContext("2d");
             this._img = this._ctx.createImageData(GPU.cols, GPU.rows);
+            this.reset();
         }
+    }
+
+    reset() {
+        for (let i = 0; i < (GPU.cols * GPU.rows) / 16; i++) {
+            this.writeWord(i, 0);
+        }
+        this.render();
     }
 
     render() {
