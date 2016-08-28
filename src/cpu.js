@@ -37,19 +37,21 @@ export class CPU {
     }
 
     constructor(mmu) {
-
         // The memory instance that holds the code to run.
         this._mmu = mmu;
+        this.reset();
+    }
 
-        // Hack CPU has 2 registers A and D.
-        // The M register isn't a real register, but uses the value
+    reset() {
+        // Hack CPU has 2 registers A and D.
+        // The M register isn't a real register, but uses the value
         // in the A register to specify a memery address.
-        // Then there is also the program counter.
-        this._reg = {
-            a: 0,
-            d: 0,
-            pc: 0
-        };
+        // Then there is also the program counter.
+        this._reg = {
+            a: 0,
+            d: 0,
+            pc: 0
+        };
 
         // The current instruction.
         this._ins = 0x0;

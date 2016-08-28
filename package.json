@@ -1,12 +1,16 @@
 {
-    "name": "hack_emulator",
-    "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
-    "scripts": {
-        "build": "babel -d lib/ src/",
-        "run": "node lib/index.js"
-    },
-    "author": "",
-    "license": "MIT"
+  "name": "hack_emulator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "babel -d lib/ src/",
+    "run": "node lib/index.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "css-loader": "^0.24.0",
+    "style-loader": "^0.13.1"
+  }
 }

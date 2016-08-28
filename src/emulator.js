@@ -6,7 +6,7 @@ import { KB } from './kb';
 
 
 // The Emulator class wires all of the individual pieces together and
-// provides controls for starting and stopping execution. 
+// provides controls for starting and stopping execution.
 export class Emulator {
 
     constructor(canvas) {
@@ -27,20 +27,38 @@ export class Emulator {
         this._refreshMS = 100;
         this._renderer = this.render.bind(this);
         this._lastRender = 0;
+
+        // Register keyboard handlers
+        window.onkeydown = (e) => this.onKeyDown(e);
+        window.onkeyup = () => this.onKeyUp();
+    }
+
+    get ticksPerStep() {
+        return this._ticks;
+    }
+
+    set ticksPerStep(ticks) {
+        this._ticks = ticks;
+    }
+
+    get refreshRate() {
+        return this._refreshMS;
+    }
+
+    set refreshRate(ms) {
+        this._refreshMS = ms;
     }
 
     loadProgram(code) {
         // Load a Hack program line by line into the ROM for execution
+        this.stop();
+        this._cpu.reset();
         this._mmu.load(code);
     }
 
     start() {
         // Clear the stop flag
         this._stop = false;
-
-        // Register keyboard handlers
-        window.onkeydown = (e) => this.onKeyDown(e);
-        window.onkeyup = () => this.onKeyUp();
 
         // Start the CPU loop and the screen renderer
         this._timer = setTimeout(this._stepper, 0);
@@ -54,10 +72,6 @@ export class Emulator {
         // Stop running the CPU
         clearInterval(this._timer);
         this._timer = null;
-
-        // Remove the keyboard handlers
-        window.onkeydown = null;
-        window.onkeyup = null;
     }
 
     render(ms) {
@@ -71,14 +85,18 @@ export class Emulator {
         if (!this._stop) requestAnimationFrame(this._renderer);
     }
 
-    step() {
+    step(force) {
         // Run through this._ticks CPU cycles. We need to stop looping and
         // use setTimeout every once in a while to make sure that our event
         // handlers have a chance to run to register keypresses, etc.
         for (let i = 0; i < this._ticks; i++) {
-            if (!this._stop) this._cpu.tick();
+            if (!this._stop || force) this._cpu.tick();
         }
-        this._timer = setTimeout(this._stepper, 0);
+        if (force) {
+            this.render(this._lastRender + this._refreshMS + 1);
+        } else {
+            this._timer = setTimeout(this._stepper, 0);
+        }
     }
 
     onKeyDown(e) {
