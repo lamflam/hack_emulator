@@ -4,6 +4,8 @@ export class KB {
 
     get map() {
         // Key table described in Chapter 4
+        // Maps the keyCode used by the browser to the values expected by
+        // the hack CPU.
         return {
             13: 128,
             8:  129,
