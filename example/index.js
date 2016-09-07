@@ -67,7 +67,7 @@ class Example {
         this.loadButton.onchange = (e) => this.reader.readAsText(e.target.files[0]);
         this.terminal = document.getElementById('terminal');
         this.programEl = document.getElementById('program');
-        this.programEl.textContent = 'No program';
+        this.programEl.textContent = 'Click the terminal icon to load a program.';
 
         this.refreshRate = document.getElementById('refresh-rate');
         this.refreshRate.value = this.emulator.refreshRate;
